@@ -1,0 +1,43 @@
+# Two-stage build for BGE Reranker ModelCar Container
+# Stage 1: Download model from HuggingFace
+FROM registry.access.redhat.com/ubi9/python-311:latest as builder
+
+USER root
+
+# Install HuggingFace Hub
+RUN pip install --no-cache-dir huggingface-hub && \
+    pip install --no-cache-dir safetensors
+
+# Create model directory
+RUN mkdir -p /models && chmod 777 /models
+
+# Copy download script
+COPY download_model.py /tmp/download_model.py
+
+# Download the BGE reranker model
+RUN python /tmp/download_model.py && \
+    ls -lah /models/ && \
+    echo "=== Download verification ===" && \
+    ls -lah /models/config.json
+
+# Stage 2: Python runtime container (has Python for vLLM!)
+FROM registry.access.redhat.com/ubi9/python-311:latest
+
+USER root
+
+# Copy model files from builder stage
+COPY --from=builder /models /models
+
+# Set permissions
+RUN chmod -R 755 /models && \
+    chown -R 1001:root /models
+
+# Switch to non-root user
+USER 1001
+
+# Labels for OpenShift AI
+LABEL name="BGE Reranker v2-m3 ModelCar" \
+      vendor="BAAI" \
+      version="2.0" \
+      summary="BGE Reranker v2-m3 for log analysis" \
+      description="Cross-encoder reranking model for improving retrieval accuracy in RAG systems"

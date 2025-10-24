@@ -1,0 +1,84 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"serving.kserve.io/v1beta1","kind":"InferenceService","metadata":{"annotations":{"openshift.io/display-name":"BGE Reranker v2-m3 (BAAI)","security.opendatahub.io/enable-auth":"false","serving.kserve.io/deploymentMode":"RawDeployment"},"labels":{"networking.kserve.io/visibility":"exposed","opendatahub.io/dashboard":"true"},"name":"bge-reranker","namespace":"model"},"spec":{"predictor":{"automountServiceAccountToken":false,"maxReplicas":1,"minReplicas":1,"model":{"args":["--port=8080","--model=/mnt/models","--served-model-name=bge-reranker","--task=score","--enforce-eager","--max-model-len=512","--dtype=half","--trust-remote-code"],"modelFormat":{"name":"vLLM"},"name":"","resources":{"limits":{"cpu":"2","memory":"8Gi","nvidia.com/gpu":"1"},"requests":{"cpu":"1","memory":"4Gi","nvidia.com/gpu":"1"}},"runtime":"nvidia-reranker-vllm","storageUri":"oci://quay.io/njajodia/bge-reranker-modelcar:v2"},"tolerations":[{"effect":"NoSchedule","key":"nvidia.com/gpu","operator":"Exists"}]}}}
+    openshift.io/display-name: BGE Reranker v2-m3 (BAAI)
+    security.opendatahub.io/enable-auth: "false"
+    serving.kserve.io/deploymentMode: RawDeployment
+  creationTimestamp: "2025-10-17T02:34:27Z"
+  finalizers:
+  - odh.inferenceservice.finalizers
+  - inferenceservice.finalizers
+  generation: 1
+  labels:
+    networking.kserve.io/visibility: exposed
+    opendatahub.io/dashboard: "true"
+  name: bge-reranker
+  namespace: model
+  resourceVersion: "55274574"
+  uid: c95fe530-27de-46bd-a5a7-de6ee59d4570
+spec:
+  predictor:
+    automountServiceAccountToken: false
+    maxReplicas: 1
+    minReplicas: 1
+    model:
+      args:
+      - --port=8080
+      - --model=/mnt/models
+      - --served-model-name=bge-reranker
+      - --task=score
+      - --enforce-eager
+      - --max-model-len=512
+      - --dtype=half
+      - --trust-remote-code
+      modelFormat:
+        name: vLLM
+      name: ""
+      resources:
+        limits:
+          cpu: "2"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "1"
+          memory: 4Gi
+          nvidia.com/gpu: "1"
+      runtime: nvidia-reranker-vllm
+      storageUri: oci://quay.io/njajodia/bge-reranker-modelcar:v2
+    tolerations:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
+status:
+  address:
+    url: http://bge-reranker-predictor.model.svc.cluster.local
+  components:
+    predictor: {}
+  conditions:
+  - lastTransitionTime: "2025-10-17T02:34:28Z"
+    status: "True"
+    type: IngressReady
+  - lastTransitionTime: "2025-10-17T02:35:42Z"
+    status: "True"
+    type: PredictorReady
+  - lastTransitionTime: "2025-10-17T02:35:42Z"
+    status: "True"
+    type: Ready
+  - lastTransitionTime: "2025-10-17T02:34:28Z"
+    severity: Info
+    status: "False"
+    type: Stopped
+  deploymentMode: RawDeployment
+  modelStatus:
+    copies:
+      failedCopies: 0
+      totalCopies: 1
+    states:
+      activeModelState: Loaded
+      targetModelState: Loaded
+    transitionStatus: UpToDate
+  observedGeneration: 1
+  url: https://bge-reranker-model.apps.rosa.loki123.orwi.p3.openshiftapps.com

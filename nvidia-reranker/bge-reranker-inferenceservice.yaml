@@ -1,0 +1,46 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: bge-reranker
+  namespace: model
+  labels:
+    networking.kserve.io/visibility: exposed
+    opendatahub.io/dashboard: "true"
+  annotations:
+    openshift.io/display-name: "BGE Reranker v2-m3 (BAAI)"
+    serving.kserve.io/deploymentMode: RawDeployment
+    security.opendatahub.io/enable-auth: "false"
+spec:
+  predictor:
+    automountServiceAccountToken: false
+    minReplicas: 1
+    maxReplicas: 1
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Exists
+    model:
+      modelFormat:
+        name: vLLM
+      name: ""
+      args:
+        - --port=8080
+        - --model=/mnt/models
+        - --served-model-name=bge-reranker
+        - --task=score
+        - --enforce-eager
+        - --max-model-len=512
+        - --dtype=half
+        - --trust-remote-code
+      resources:
+        limits:
+          cpu: "2"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "1"
+          memory: 4Gi
+          nvidia.com/gpu: "1"
+      runtime: nvidia-reranker-vllm
+      storageUri: oci://quay.io/njajodia/bge-reranker-modelcar:v2
+

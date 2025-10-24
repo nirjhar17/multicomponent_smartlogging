@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-troubleshooter-v9
+  namespace: ai-troubleshooter-v9
+  labels:
+    app: ai-troubleshooter-v9
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-troubleshooter-v9
+  template:
+    metadata:
+      labels:
+        app: ai-troubleshooter-v9
+    spec:
+      containers:
+      - name: streamlit-app
+        image: registry.access.redhat.com/ubi9/python-311:latest
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            set -e
+            echo "🚀 Starting AI Troubleshooter v9"
+            
+            cd $HOME
+            
+            echo "📦 Copying application files..."
+            cp -rL /app-config/* .
+            
+            echo "📋 Installing dependencies..."
+            pip install --no-cache-dir -r requirements.txt
+            
+            echo "✅ Starting Streamlit app..."
+            streamlit run v9_streamlit_chat_app_opensearch.py --server.port=8501 --server.address=0.0.0.0
+        ports:
+        - containerPort: 8501
+          name: http
+        env:
+        - name: LLAMA_STACK_URL
+          value: "http://llama-stack-service.model.svc.cluster.local:8321"
+        - name: RERANKER_URL
+          value: "http://reranker-service.model.svc.cluster.local:8080/rerank"
+        - name: VECTOR_DB_ID
+          value: "k8s-logs-db"
+        - name: OPENSEARCH_ENDPOINT
+          value: "search-aiops-logs-v2-v5dyuq7c7syvyo2jawyqnxmqka.eu-north-1.es.amazonaws.com"
+        - name: OPENSEARCH_USERNAME
+          value: "admin"
+        - name: OPENSEARCH_PASSWORD
+          value: "Admin123!@#"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: app-config
+          mountPath: /app-config
+      volumes:
+      - name: app-config
+        configMap:
+          name: v9-app-config-latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-troubleshooter-v9-service
+  namespace: ai-troubleshooter-v9
+spec:
+  selector:
+    app: ai-troubleshooter-v9
+  ports:
+  - port: 8501
+    targetPort: 8501
+    protocol: TCP
+    name: http
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ai-troubleshooter-v9-route
+  namespace: ai-troubleshooter-v9
+spec:
+  to:
+    kind: Service
+    name: ai-troubleshooter-v9-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
