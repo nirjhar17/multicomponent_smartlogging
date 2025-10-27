@@ -1,0 +1,167 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-troubleshooter-v10
+  namespace: ai-troubleshooter-v10
+  labels:
+    app: ai-troubleshooter-v10
+    version: v10
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-troubleshooter-v10
+  template:
+    metadata:
+      labels:
+        app: ai-troubleshooter-v10
+        version: v10
+    spec:
+      containers:
+      - name: streamlit-app
+        image: registry.access.redhat.com/ubi9/python-311:latest
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            set -e
+            echo "🚀 Starting AI Troubleshooter v10 with LangSmith..."
+            
+            # Use writable directory
+            APP_DIR=/opt/app-root/src/app
+            mkdir -p $APP_DIR
+            
+            # Copy application files from configmaps
+            cp /app-config/* $APP_DIR/ 2>/dev/null || true
+            cp /streamlit-app/* $APP_DIR/ 2>/dev/null || true
+            cd $APP_DIR
+            
+            # Install dependencies
+            echo "📦 Installing dependencies..."
+            pip install --no-cache-dir -r requirements.txt
+            
+            # Set environment variables
+            export PYTHONPATH=$APP_DIR:$PYTHONPATH
+            
+            # Run Streamlit
+            echo "✅ Starting Streamlit on port 8501..."
+            streamlit run v10_streamlit_chat_app_opensearch.py \
+              --server.port=8501 \
+              --server.address=0.0.0.0 \
+              --server.headless=true \
+              --browser.gatherUsageStats=false
+        ports:
+        - containerPort: 8501
+          name: http
+        env:
+        # LlamaStack Configuration
+        - name: LLAMA_STACK_URL
+          value: "http://llamastack-custom-distribution-service.model.svc.cluster.local:8321"
+        - name: LLAMA_STACK_MODEL
+          value: "llama-32-3b-instruct"
+        - name: EMBEDDING_MODEL
+          value: "granite-embedding-125m"
+        
+        # BGE Reranker Configuration
+        - name: BGE_RERANKER_URL
+          value: "https://bge-reranker-model.apps.rosa.loki123.orwi.p3.openshiftapps.com"
+        
+        # OpenSearch Configuration
+        - name: OPENSEARCH_ENDPOINT
+          value: "search-aiops-logs-v2-v5dyuq7c7syvyo2jawyqnxmqka.eu-north-1.es.amazonaws.com"
+        - name: OPENSEARCH_USERNAME
+          value: "admin"
+        - name: OPENSEARCH_PASSWORD
+          value: "Admin123!@#"
+        
+        # LangSmith Configuration (NEW!)
+        - name: LANGCHAIN_TRACING_V2
+          value: "true"
+        - name: LANGCHAIN_ENDPOINT
+          value: "https://api.smith.langchain.com"
+        - name: LANGCHAIN_API_KEY
+          value: "YOUR_LANGSMITH_API_KEY_HERE"  # Get from https://smith.langchain.com/settings
+        - name: LANGCHAIN_PROJECT
+          value: "ai-troubleshooter-v10"
+        - name: LANGSMITH_API_KEY
+          value: "YOUR_LANGSMITH_API_KEY_HERE"  # Get from https://smith.langchain.com/settings
+        - name: LANGSMITH_PROJECT
+          value: "ai-troubleshooter-v10"
+        
+        # Application Configuration
+        - name: VECTOR_DB_ID
+          value: "openshift-logs-v10"
+        - name: MAX_ITERATIONS
+          value: "3"
+        
+        volumeMounts:
+        - name: app-config
+          mountPath: /app-config
+        - name: streamlit-app
+          mountPath: /streamlit-app
+        
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+        
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      
+      volumes:
+      - name: app-config
+        configMap:
+          name: v10-app-config
+      - name: streamlit-app
+        configMap:
+          name: v10-streamlit-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-troubleshooter-v10-service
+  namespace: ai-troubleshooter-v10
+  labels:
+    app: ai-troubleshooter-v10
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8501
+    targetPort: 8501
+    protocol: TCP
+    name: http
+  selector:
+    app: ai-troubleshooter-v10
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ai-troubleshooter-v10
+  namespace: ai-troubleshooter-v10
+  labels:
+    app: ai-troubleshooter-v10
+spec:
+  to:
+    kind: Service
+    name: ai-troubleshooter-v10-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+

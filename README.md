@@ -1,4 +1,4 @@
-# AI Troubleshooter v9 - Multi-Component AIOps System
+# AI Troubleshooter - Multi-Component AIOps System
 
 **Multi-agent self-corrective RAG system for analyzing logs from ANY infrastructure component**
 
@@ -7,10 +7,13 @@
 [![Components](https://img.shields.io/badge/components-5-blue)]()
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)]()
 
+> **📢 NEW: [v10 with LangSmith Integration](./ai-troubleshooter-v10/)** - Full observability, tracing, and debugging!
+
 ---
 
 ## 📚 Table of Contents
 
+- [Versions](#-versions)
 - [Overview](#-overview)
 - [What's New in v9](#-whats-new-in-v9)
 - [Supported Components](#-supported-components)
@@ -23,6 +26,27 @@
 - [Repository Structure](#-repository-structure)
 - [Documentation](#-documentation)
 - [Troubleshooting](#-troubleshooting)
+
+---
+
+## 📦 Versions
+
+| Version | Description | Status | Key Features |
+|---------|-------------|--------|--------------|
+| **[v10](./ai-troubleshooter-v10/)** | Production + Observability | ✅ **LATEST** | LangSmith tracing, real log fetching, full debugging |
+| **v9** | Multi-Component AIOps | ✅ Stable | 5 components, OpenSearch, hybrid retrieval |
+| v7/v8 | Kubernetes-only | ⚠️ Legacy | Single namespace, oc commands |
+
+**Choose v10 if you need:**
+- 📊 Complete workflow tracing and debugging
+- 🔍 Real-time performance monitoring
+- 🐛 Visual inspection of agent decisions
+- 📈 Production-ready observability with LangSmith
+
+**Choose v9 if you need:**
+- 🚀 Stable, battle-tested multi-component system
+- 📡 OpenSearch integration without external dependencies
+- 🔧 Simple deployment without observability tools
 
 ---
 

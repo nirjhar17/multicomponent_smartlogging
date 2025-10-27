@@ -1,0 +1,44 @@
+# AI Troubleshooter v9 - Minimal Dependencies (NO PyTorch!)
+# Core LangGraph and LangChain
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-classic
+
+# LangSmith for observability
+langsmith>=0.2.0
+
+# OpenSearch client
+opensearch-py>=2.3.0
+
+# Llama Stack client (for external LLM/embeddings)
+llama-stack-client>=0.0.53
+
+# Fire (required by llama-stack-client)
+fire>=0.5.0
+
+# Vector search (lightweight, NO PyTorch!)
+faiss-cpu>=1.8.0
+
+# BM25 for lexical search (lightweight!)
+rank-bm25>=0.2.2
+
+# HTTP requests
+requests>=2.31.0
+
+# Streamlit for UI
+streamlit>=1.38.0
+
+# YAML parsing
+PyYAML>=6.0
+
+# REMOVED (not needed for v9):
+# sentence-transformers (uses external BGE reranker via API)
+# torch (embeddings come from external Llama Stack!)
+#
+# Why this is safe:
+# - Embeddings: External Llama Stack (Granite 125M)
+# - Reranker: External BGE service
+# - FAISS: Just vector store (no PyTorch needed)
