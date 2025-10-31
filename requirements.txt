@@ -1,4 +1,4 @@
-# AI Troubleshooter v9 - Minimal Dependencies (NO PyTorch!)
+# AI Troubleshooter v10 - Minimal Dependencies (NO PyTorch!)
 # Core LangGraph and LangChain
 langgraph>=0.2.0
 langchain>=0.3.0
@@ -15,6 +15,12 @@ opensearch-py>=2.3.0
 
 # Llama Stack client (for external LLM/embeddings)
 llama-stack-client>=0.0.53
+
+# OpenAI client (for GPT models, Grok, and vLLM)
+openai>=1.0.0
+
+# Pydantic for structured output validation
+pydantic>=2.0.0
 
 # Fire (required by llama-stack-client)
 fire>=0.5.0

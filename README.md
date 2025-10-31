@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+# AI Troubleshooter v10 - Multi-Component AIOps System
+=======
 # AI Troubleshooter - Multi-Component AIOps System
+>>>>>>> 8fc7176b72361efb23e7884ae37d4d53e1df0f9f
 
 **Multi-agent self-corrective RAG system for analyzing logs from ANY infrastructure component**
 
@@ -15,7 +19,7 @@
 
 - [Versions](#-versions)
 - [Overview](#-overview)
-- [What's New in v9](#-whats-new-in-v9)
+- [What's New in v10](#-whats-new-in-v10)
 - [Supported Components](#-supported-components)
 - [Architecture](#-architecture)
 - [Quick Start](#-quick-start)
@@ -52,7 +56,7 @@
 
 ## 🎯 Overview
 
-AI Troubleshooter v9 extends our proven 5-agent RAG system to analyze logs from **ANY infrastructure component** - not just Kubernetes. It uses OpenSearch as a centralized log aggregation platform and applies the same intelligent analysis across databases, servers, storage devices, firewalls, and Kubernetes pods.
+AI Troubleshooter v10 extends our proven 5-agent RAG system to analyze logs from **ANY infrastructure component** - not just Kubernetes. It uses OpenSearch as a centralized log aggregation platform and applies the same intelligent analysis across databases, servers, storage devices, firewalls, and Kubernetes pods.
 
 ### Key Features
 
@@ -68,12 +72,12 @@ AI Troubleshooter v9 extends our proven 5-agent RAG system to analyze logs from 
 
 ---
 
-## 🆕 What's New in v9
+## 🆕 What's New in v10
 
 ### Expanded Beyond Kubernetes
 
 **v7/v8**: Kubernetes-only log analysis  
-**v9**: Multi-component infrastructure analysis
+**v10**: Multi-component infrastructure analysis
 
 ### New Capabilities
 
@@ -172,32 +176,32 @@ User Query → Component Selection
 - **BGE Reranker v2-m3** service
 - `oc` CLI installed
 
-### Deploy v9 in 5 Minutes
+### Deploy v10 in 5 Minutes
 
 ```bash
 # 1. Create namespace
-oc new-project ai-troubleshooter-v9
+oc new-project ai-troubleshooter-v10
 
 # 2. Create OpenSearch credentials secret
 oc create secret generic opensearch-credentials \
   --from-literal=username=admin \
   --from-literal=password='YourPassword' \
-  -n ai-troubleshooter-v9
+  -n ai-troubleshooter-v10
 
 # 3. Create ConfigMap with application code
-oc create configmap v9-app-config \
+oc create configmap v10-app-config \
   --from-file=k8s_hybrid_retriever.py \
-  --from-file=v9_bge_reranker.py \
-  --from-file=v9_graph_edges.py \
-  --from-file=v9_graph_nodes.py \
-  --from-file=v9_main_graph.py \
-  --from-file=v9_opensearch_fetcher.py \
-  --from-file=v9_state_schema.py \
-  --from-file=v9_streamlit_chat_app_opensearch.py \
+  --from-file=v10_bge_reranker.py \
+  --from-file=v10_graph_edges.py \
+  --from-file=v10_graph_nodes.py \
+  --from-file=v10_main_graph.py \
+  --from-file=v10_opensearch_fetcher.py \
+  --from-file=v10_state_schema.py \
+  --from-file=v10_streamlit_chat_app_opensearch.py \
   --from-file=requirements.txt \
-  -n ai-troubleshooter-v9
+  -n ai-troubleshooter-v10
 
-# 4. Update environment variables in v9_deployment_new.yaml
+# 4. Update environment variables in v10_deployment_new.yaml
 # - LLAMA_STACK_URL
 # - RERANKER_URL
 # - OPENSEARCH_ENDPOINT
@@ -205,10 +209,10 @@ oc create configmap v9-app-config \
 # - OPENSEARCH_PASSWORD
 
 # 5. Deploy the application
-oc apply -f v9_deployment_new.yaml
+oc apply -f v10_deployment_new.yaml
 
 # 6. Get the application URL
-oc get route ai-troubleshooter-v9-route -n ai-troubleshooter-v9
+oc get route ai-troubleshooter-v10-route -n ai-troubleshooter-v10
 ```
 
 ---
@@ -217,7 +221,7 @@ oc get route ai-troubleshooter-v9-route -n ai-troubleshooter-v9
 
 ### Environment Variables
 
-Edit in `v9_deployment_new.yaml`:
+Edit in `v10_deployment_new.yaml`:
 
 ```yaml
 env:
@@ -250,7 +254,7 @@ env:
 
 ### OpenSearch Index Structure
 
-v9 expects logs in the following format:
+v10 expects logs in the following format:
 
 ```json
 {
@@ -377,7 +381,7 @@ Response:
 
 ### Forwarding OpenShift Logs to OpenSearch
 
-v9 includes support for real-time OpenShift log forwarding:
+v10 includes support for real-time OpenShift log forwarding:
 
 ```yaml
 apiVersion: observability.openshift.io/v1
@@ -460,7 +464,7 @@ spec:
 
 ### Component-Specific Prompts
 
-v9 uses tailored system prompts for each component:
+v10 uses tailored system prompts for each component:
 
 - **Database**: Suggests `psql`, `mysql`, SQL optimization commands
 - **Server**: Suggests `iostat`, `top`, `systemctl` commands
@@ -473,7 +477,7 @@ v9 uses tailored system prompts for each component:
 ## 📁 Repository Structure
 
 ```
-ai-troubleshooter-v9/
+ai-troubleshooter-v10/
 ├── README.md                             # This file
 ├── ARCHITECTURE.md                       # System design
 ├── CRITICAL_FIXES_APPLIED.md             # Technical fixes (v7/v8)
@@ -482,17 +486,17 @@ ai-troubleshooter-v9/
 │
 ├── Core Application (8 files)
 │   ├── k8s_hybrid_retriever.py           # Agent 1: Hybrid Retrieval
-│   ├── v9_bge_reranker.py                # Agent 2: Reranking
-│   ├── v9_graph_nodes.py                 # Agents 3,4,5 implementations
-│   ├── v9_graph_edges.py                 # Graph routing logic
-│   ├── v9_main_graph.py                  # LangGraph workflow
-│   ├── v9_opensearch_fetcher.py          # OpenSearch client
-│   ├── v9_state_schema.py                # State management
-│   └── v9_streamlit_chat_app_opensearch.py # Chat UI
+│   ├── v10_bge_reranker.py                # Agent 2: Reranking
+│   ├── v10_graph_nodes.py                 # Agents 3,4,5 implementations
+│   ├── v10_graph_edges.py                 # Graph routing logic
+│   ├── v10_main_graph.py                  # LangGraph workflow
+│   ├── v10_opensearch_fetcher.py          # OpenSearch client
+│   ├── v10_state_schema.py                # State management
+│   └── v10_streamlit_chat_app_opensearch.py # Chat UI
 │
 ├── Configuration (2 files)
 │   ├── requirements.txt                  # Python dependencies (NO PyTorch!)
-│   └── v9_deployment_new.yaml            # OpenShift deployment
+│   └── v10_deployment_new.yaml            # OpenShift deployment
 │
 └── Supporting Directories
     ├── infrastructure/                   # Deployment configs
@@ -522,10 +526,10 @@ ai-troubleshooter-v9/
 
 ```bash
 # Check pod status
-oc get pods -n ai-troubleshooter-v9
+oc get pods -n ai-troubleshooter-v10
 
 # Check logs
-oc logs -n ai-troubleshooter-v9 -l app=ai-troubleshooter-v9
+oc logs -n ai-troubleshooter-v10 -l app=ai-troubleshooter-v10
 
 # Common issues:
 # 1. OpenSearch connection failed - check OPENSEARCH_ENDPOINT
@@ -550,7 +554,7 @@ curl -u admin:password https://your-opensearch-endpoint/_cat/indices
 
 ```bash
 # Check pod logs for retrieval errors
-oc logs -n ai-troubleshooter-v9 -l app=ai-troubleshooter-v9 | grep -i "retriev\|embedding"
+oc logs -n ai-troubleshooter-v10 -l app=ai-troubleshooter-v10 | grep -i "retriev\|embedding"
 
 # Verify Llama Stack is serving embeddings
 oc logs -n model -l app=llamastack-custom-distribution | grep "inference/embeddings"
@@ -563,7 +567,7 @@ oc exec -n model llamastack-pod -- ls /.llama/hub/ | grep granite
 
 ```bash
 # Verify EMBEDDING_DIMENSION matches Granite model
-oc get deployment ai-troubleshooter-v9 -n ai-troubleshooter-v9 \
+oc get deployment ai-troubleshooter-v10 -n ai-troubleshooter-v10 \
   -o jsonpath='{.spec.template.spec.containers[0].env[?(@.name=="EMBEDDING_DIMENSION")].value}'
 
 # Should output: 768 (Granite 125M uses 768 dimensions, NOT 384)
@@ -581,7 +585,7 @@ Based on [NVIDIA's Multi-Agent Log Analysis](https://developer.nvidia.com/blog/b
 - NVIDIA NV-RerankQA-1B → BGE Reranker v2-m3
 - Generic logs → OpenShift-specific
 
-### v9 Extensions (Multi-Component)
+### v10 Extensions (Multi-Component)
 - Kubernetes-only → Multi-component infrastructure
 - `oc` commands → OpenSearch queries
 - Single namespace → Multiple component types
@@ -591,7 +595,7 @@ Based on [NVIDIA's Multi-Agent Log Analysis](https://developer.nvidia.com/blog/b
 
 ## 🤝 Contributing
 
-Contributions welcome! Key areas for v9:
+Contributions welcome! Key areas for v10:
 
 - Additional component types (Redis, Kafka, etc.)
 - Cross-component correlation improvements

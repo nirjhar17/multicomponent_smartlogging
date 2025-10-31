@@ -271,9 +271,9 @@ def main():
         print(f"   Loading into OpenSearch...")
         success, failed = generator.load_logs(logs)
         total_success += success
-        total_failed += failed
+        total_failed += len(failed)
         
-        print(f"   ✅ Loaded {success} logs ({failed} failed)")
+        print(f"   ✅ Loaded {success} logs ({len(failed)} failed)")
         time.sleep(1)  # Rate limiting
     
     print(f"\n{'='*60}")
@@ -285,4 +285,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
