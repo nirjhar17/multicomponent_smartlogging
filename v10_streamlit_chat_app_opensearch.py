@@ -281,7 +281,7 @@ if 'current_device' not in st.session_state:
 
 # Page configuration
 st.set_page_config(
-    page_title="AI Troubleshooter v9 - Multi-Component AIOps",
+    page_title="AI Troubleshooter v10 - Multi-Component AIOps",
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="expanded"

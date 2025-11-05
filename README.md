@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # AI Troubleshooter v10 - Multi-Component AIOps System
-=======
-# AI Troubleshooter - Multi-Component AIOps System
->>>>>>> 8fc7176b72361efb23e7884ae37d4d53e1df0f9f
 
 **Multi-agent self-corrective RAG system for analyzing logs from ANY infrastructure component**
 
