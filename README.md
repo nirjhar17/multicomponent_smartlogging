@@ -589,31 +589,9 @@ Based on [NVIDIA's Multi-Agent Log Analysis](https://developer.nvidia.com/blog/b
 
 ---
 
-## 🤝 Contributing
-
-Contributions welcome! Key areas for v10:
-
-- Additional component types (Redis, Kafka, etc.)
-- Cross-component correlation improvements
-- Performance optimizations
-- Agent prompt refinements
-- New deployment targets (AWS EKS, Azure AKS, etc.)
-
----
-
-## 📝 License
-
-Apache 2.0 - Adapts concepts from NVIDIA's GenerativeAIExamples
-
-Original architecture: https://github.com/nirjhar17/smart_logging
-
----
 
 ## 🔗 Links
 
-- **Original Project (v7/v8)**: https://github.com/nirjhar17/smart_logging
-- **NVIDIA Blog**: https://developer.nvidia.com/blog/build-a-log-analysis-multi-agent-self-corrective-rag-system-with-nvidia-nemotron/
-- **NVIDIA Code**: https://github.com/NVIDIA/GenerativeAIExamples/tree/main/community/log_analysis_multi_agent_rag
 - **OpenShift Logging v6**: https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/logging/cluster-logging-deploying
 
 ---
